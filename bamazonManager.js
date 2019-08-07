@@ -71,4 +71,64 @@ function lowInventoryView(){
         }
      checkInventoryStart();
     });
+};
+
+function addInventory(){
+    inquirer
+    .prompt([
+        {
+            name:"product",
+            type:"input",
+            message:"What product would you like to add to the invetory?"
+        },
+        {
+            name:"department",
+            type:"input",
+            message:"What department does this product belong?"
+        },
+        {
+            name:"price",
+            type:"input",
+            message:"How much does each item cost?",
+            validate: function(value){
+                if (isNaN(value) === false){
+                return true;
+                }
+                return false
+            }
+            
+        },
+        {
+            name:"stock",
+            type:"input",
+            message:"How much stock of this item do we have?",
+            validate: function(value){
+                if (isNaN(value) === false){
+                return true;
+                }
+                return false
+            }
+            
+        },
+       
+        
+
+    ]).then(function(answer){
+        connection.query(
+            "INSERT INTO products SET ?",
+            {
+                product_name: answer.product,
+                department_name: answer.department,
+                price: answer.price,
+                stock_quantity: answer.stock
+            },
+            function(err){
+                if(err) throw err;
+                console.log("New inventory added.");
+                checkInventoryStart();
+            }
+        )
+    })
+
+
 }
