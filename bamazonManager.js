@@ -57,3 +57,18 @@ function productView(){
         checkInventoryStart();
     })
 }
+
+function lowInventoryView(){
+    connection.query("SELECT * FROM products", function(err, results){
+        if (err) throw err;
+
+        for (let i =0; i < results.length; i++){
+            if (results[i].stock_quantity <= 5){
+            console.table(results[i]);
+            console.log("-----------------------------")
+            console.log("low inventory above")
+            }
+        }
+     checkInventoryStart();
+    });
+}
