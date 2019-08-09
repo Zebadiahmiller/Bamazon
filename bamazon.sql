@@ -6,6 +6,7 @@ create table products(
 	id integer(100) auto_increment not null,
     product_name varchar(50) not null,
     department_name varchar(100) not null,
+    
     price decimal(20,2) not null,
     stock_quantity integer not null,
     primary key(id)

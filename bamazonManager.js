@@ -47,11 +47,12 @@ function checkInventoryStart(){
 function productView(){
     connection.query("SELECT * FROM products", function(err, results){
         if(err) throw err;
+        console.table(results)
 
-        for (let i =0; i < results.length; i++){
-            console.table(results[i]);
+        // for (let i =0; i < results.length; i++){
+        //     console.table(results[i]);
 
-        }
+        // }
         console.log("Inventory above")
        console.log("-----------------------------------------------------------")
         checkInventoryStart();
@@ -72,8 +73,71 @@ function lowInventoryView(){
      checkInventoryStart();
     });
 };
-
 function addInventory(){
+    connection.query("SELECT * FROM products", function(err, results){
+        if (err) throw err;
+    inquirer
+    .prompt([
+        {
+            name: "choice",
+            type: "rawlist",
+            choices: function () {
+                const chooser = [];
+                for (let i = 0; i < results.length; i++) {
+                    chooser.push(results[i].product_name)
+                    // console.log(chooser)
+                };
+
+
+                return chooser;
+
+            },
+            message: "What inventory item would you like to update?"
+        },
+        {
+            name:"amount",
+            type: "input",
+            message:"How much inventory would you like to add?",
+            validate: function(value){
+                if (isNaN(value) === false){
+                return true;
+                }
+                return false
+            }
+
+        }
+    ]).then(function(answer){
+        let choosed;
+        for (let i = 0; i < results.length; i++){
+            if (results[i].product_name === answer.choice){
+                choosed = results[i];
+               
+            }
+        }  
+        connection.query(
+            "UPDATE products SET ? WHERE ?",
+            [
+            {
+                stock_quantity: parseInt(answer.amount) + parseInt(choosed.stock_quantity) 
+            },
+            {
+                id: choosed.id
+            }
+        ], function(error) {
+            if (error) throw err;
+            console.log("inventory updated!");
+            checkInventoryStart();
+          }
+        )
+                       
+                
+        
+    })
+});
+}
+
+
+function addProduct(){
     inquirer
     .prompt([
         {
