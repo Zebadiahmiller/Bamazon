@@ -141,6 +141,18 @@ function addProduct(){
     inquirer
     .prompt([
         {
+            name:"ID",
+            type:"input",
+            message:"What is the id number of this product?",
+            validate: function(value){
+                if (isNaN(value) === false){
+                return true;
+                }
+                return false
+            }
+            
+        },
+        {
             name:"product",
             type:"input",
             message:"What product would you like to add to the invetory?"
@@ -181,6 +193,7 @@ function addProduct(){
         connection.query(
             "INSERT INTO products SET ?",
             {
+                id:answer.ID,
                 product_name: answer.product,
                 department_name: answer.department,
                 price: answer.price,
@@ -192,6 +205,7 @@ function addProduct(){
                 checkInventoryStart();
             }
         )
+       
     })
 
 

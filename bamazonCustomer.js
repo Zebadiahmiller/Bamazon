@@ -67,17 +67,37 @@ function buyItem() {
                             id: choosed.id
                         }
                     ],
-                    
-                    function(err){
-                        if (err) throw err;
-                        console.log("item purchased");
-                        console.log("Total Purchase amount was: " + answer.amount*choosed.price);
-                        connection.end();
-
+                            function(err){
+                                if (err) throw err;
+                                console.log("item purchased");
+                                console.log("Total Purchase amount was: " + answer.amount*choosed.price);
+                                
+                            },
+                            )
+                            connection.query(
+                                "UPDATE products SET ? WHERE ?",
+                                [
+                                    {
+                                        product_sales: answer.amount*choosed.price
+                                    },
+                                    {
+                                        id: choosed.id
+                                    }
+                                ],
+                                function(err){
+                                    if (err) throw err;
+                                    connection.end();
                     }
-        
                     )
+
+                    
+                   
+        
+
+                       
+                        
                 }
+            
                else {
                    console.log("Insufficient Quanitity!!")
                    connection.end();
