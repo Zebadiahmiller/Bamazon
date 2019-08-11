@@ -28,7 +28,7 @@ function departmentCheck(){
         if (answer.choice === "View product sales?"){
             productView();
         }
-        else if(answer.choice === "View Low Inventory"){
+        else if(answer.choice === "Add new department?"){
             addDepartment();
         }       
         else{
@@ -61,4 +61,57 @@ function productView(){
     departmentCheck();
     })
     
+}
+
+function addDepartment(){
+    inquirer
+    .prompt([
+        {
+            name:"ID",
+            type:"input",
+            message:"What is the id number for this department?",
+            validate: function(value){
+                if (isNaN(value) === false){
+                return true;
+                }
+                return false
+            }
+            
+        },
+        {
+            name:"product",
+            type:"input",
+            message:"What is the new departments name?"
+        },
+        {
+            name:"ohcosts",
+            type:"input",
+            message:"What is the over head cost of this department?",
+            validate: function(value){
+                if (isNaN(value) === false){
+                return true;
+                }
+                return false
+            }
+        },        
+
+    ]).then(function(answer){
+        connection.query(
+            "INSERT INTO departments SET ?",
+            {
+                department_id:answer.ID,
+                department_name: answer.product,                
+                over_head_costs: answer.ohcosts,
+                
+            },
+            function(err){
+                if(err) throw err;
+                console.log("New department added!");
+                departmentCheck();
+            }
+        )
+       
+    })
+
+
 }

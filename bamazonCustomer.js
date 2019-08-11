@@ -12,8 +12,50 @@ connection.connect(function (err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId);
     // afterConnection();
-    buyItem();
+    start();
 });
+function start(){
+
+    inquirer
+    .prompt([
+        {
+            name:"choice",
+            type:"list",
+            message:"What would you like to do?",
+            choices: ["View products for sale?","Purchase an item?", "Exit"]
+            
+        }
+    ]).then(function(answer){
+        if (answer.choice === "View products for sale?"){
+            viewProducts();
+        }
+        else if(answer.choice === "Purchase an item?"){
+            buyItem();
+        }      
+        else{
+            connection.end();
+        }
+    })
+
+};
+
+    function viewProducts(){
+        connection.query("SELECT * FROM products", function(err, results){
+        if(err) throw err;
+        console.table(results)
+
+        // for (let i =0; i < results.length; i++){
+        //     console.table(results[i]);
+
+        // }
+        console.log("Items for sale are listed in the above table.")
+       console.log("-----------------------------------------------------------")
+       start();
+    
+    })};
+       
+    
+
 
  
 
@@ -86,7 +128,7 @@ function buyItem() {
                                 ],
                                 function(err){
                                     if (err) throw err;
-                                    connection.end();
+                                    start();
                     }
                     )
 
