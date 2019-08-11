@@ -98,12 +98,12 @@ function buyItem() {
             //    console.log(choosed.stock_quantity);
 
             
-                if (choosed.stock_quantity > parseInt(answer.amount)){
+                if (parseInt(choosed.stock_quantity) > parseInt(answer.amount)){
                     connection.query(
                         "UPDATE products SET ? WHERE ?",
                         [
                         {
-                            stock_quantity: choosed.stock_quantity - answer.amount
+                            stock_quantity: parseInt(choosed.stock_quantity) - parseInt(answer.amount)
                         },
                         {
                             id: choosed.id
@@ -120,7 +120,7 @@ function buyItem() {
                                 "UPDATE products SET ? WHERE ?",
                                 [
                                     {
-                                        product_sales: answer.amount*choosed.price
+                                        product_sales: parseFloat(choosed.product_sales) + parseFloat(answer.amount)*parseFloat(choosed.price)
                                     },
                                     {
                                         id: choosed.id
@@ -142,7 +142,7 @@ function buyItem() {
             
                else {
                    console.log("Insufficient Quanitity!!")
-                   connection.end();
+                   start();
                }
             
             })
